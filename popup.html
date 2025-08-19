@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body {
+            width: 350px;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            margin: 0 0 20px 0;
+            font-size: 24px;
+            font-weight: 300;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            background: white;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            text-align: center;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .spinner {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 2px solid white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .result-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-left: 3px solid #4CAF50;
+        }
+
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .result-price {
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .price-source-indicator {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .result-link {
+            color: #87CEEB;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .result-link:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid rgba(255, 0, 0, 0.5);
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            color: #ffcccc;
+        }
+
+        .settings-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .settings-link a {
+            color: #87CEEB;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .settings-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 EAN Price Finder</h1>
+
+        <div class="input-group">
+            <label for="eanInput">Enter EAN Code:</label>
+            <input type="text" id="eanInput" placeholder="e.g., 4006381333634" maxlength="13">
+        </div>
+
+        <button id="searchBtn">Search Prices</button>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Searching for prices...</p>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="settings-link">
+            <a href="#" id="settingsLink">⚙️ API Settings</a>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>EAN Price Finder - Settings</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 32px;
+            font-weight: 300;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .section h2 {
+            margin-top: 0;
+            font-size: 20px;
+            color: #87CEEB;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus {
+            outline: none;
+            background: white;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #B0E0E6;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        .help-text a {
+            color: #87CEEB;
+            text-decoration: none;
+        }
+
+        .help-text a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background 0.3s;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        button.secondary {
+            background: #6c757d;
+        }
+
+        button.secondary:hover {
+            background: #5a6268;
+        }
+
+        .status-message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .status-message.success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+            color: #90EE90;
+        }
+
+        .status-message.error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.5);
+            color: #FFB6BA;
+        }
+
+        .api-status {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-indicator.connected {
+            background: #4CAF50;
+        }
+
+        .status-indicator.disconnected {
+            background: #f44336;
+        }
+
+        .status-indicator.testing {
+            background: #ff9800;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .instructions {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid #87CEEB;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .instructions h3 {
+            margin-top: 0;
+            color: #87CEEB;
+        }
+
+        .instructions ol {
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚙️ EAN Price Finder Settings</h1>
+
+        <div class="section">
+            <h2>Google Custom Search API Configuration</h2>
+
+            <div class="form-group">
+                <label for="apiKey">Google API Key:</label>
+                <input type="password" id="apiKey" placeholder="Enter your Google API key">
+                <div class="help-text">
+                    You need a Google Custom Search API key.
+                    <a href="https://developers.google.com/custom-search/v1/introduction" target="_blank">Get API key here</a>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="searchEngineId">Search Engine ID:</label>
+                <input type="text" id="searchEngineId" placeholder="Enter your Custom Search Engine ID">
+                <div class="help-text">
+                    Create a custom search engine and get the ID.
+                    <a href="https://cse.google.com/cse/" target="_blank">Create search engine here</a>
+                </div>
+            </div>
+
+            <div class="api-status">
+                <div class="status-indicator disconnected" id="statusIndicator"></div>
+                <span id="statusText">Not configured</span>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button id="saveBtn">Save Settings</button>
+                <button id="testBtn" class="secondary">Test Connection</button>
+            </div>
+
+            <div class="status-message" id="statusMessage"></div>
+        </div>
+
+        <div class="instructions">
+            <h3>Setup Instructions:</h3>
+            <ol>
+                <li><strong>Get Google API Key:</strong>
+                    <ul>
+                        <li>Go to <a href="https://console.developers.google.com/" target="_blank">Google Cloud Console</a></li>
+                        <li>Create a new project or select existing one</li>
+                        <li>Enable "Custom Search API"</li>
+                        <li>Create credentials (API Key)</li>
+                        <li>Copy the API key and paste it above</li>
+                    </ul>
+                </li>
+                <li><strong>Create Custom Search Engine:</strong>
+                    <ul>
+                        <li>Go to <a href="https://cse.google.com/cse/" target="_blank">Google Custom Search Engine</a></li>
+                        <li>Click "Add" to create a new search engine</li>
+                        <li>Enter "*" in "Sites to search" to search the entire web</li>
+                        <li>Click "Create" and copy the Search Engine ID</li>
+                        <li>Paste the ID in the field above</li>
+                    </ul>
+                </li>
+                <li><strong>Test Configuration:</strong>
+                    <ul>
+                        <li>Save your settings and click "Test Connection"</li>
+                        <li>If successful, the extension is ready to use!</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <p><strong>Note:</strong> Google Custom Search API provides 100 free searches per day.
+            Additional searches require payment.</p>
+        </div>
+    </div>
+
+    <script src="options.js"></script>
+</body>
+</html>
