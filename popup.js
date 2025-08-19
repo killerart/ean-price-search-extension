@@ -181,17 +181,152 @@ document.addEventListener('DOMContentLoaded', function() {
     function extractPrice(text) {
         if (!text) return null;
 
-        // Common price patterns
+        // Common price patterns for various currencies
         const patterns = [
+            // USD - US Dollar
             /\$\s*\d+[\.,]\d{2}/g,        // $10.99, $10,99, $ 10.99, $ 10,99
             /\d+[\.,]\d{2}\s*\$/g,       // 10.99$, 10,99 $
+            /\d+[\.,]\d{2}\s*USD/gi,     // 10.99 USD
+
+            // EUR - Euro
             /€\s*\d+[\.,]\d{2}/g,        // €10.99, €10,99, € 10.99, € 10,99
             /\d+[\.,]\d{2}\s*€/g,        // 10.99€, 10,99 €
+            /\d+[\.,]\d{2}\s*EUR/gi,     // 10.99 EUR
+
+            // GBP - British Pound
             /£\s*\d+[\.,]\d{2}/g,        // £10.99, £10,99, £ 10.99, £ 10,99
             /\d+[\.,]\d{2}\s*£/g,        // 10.99£, 10,99 £
-            /\d+[\.,]\d{2}\s*USD/gi,     // 10.99 USD
-            /\d+[\.,]\d{2}\s*EUR/gi,     // 10.99 EUR
-            /\d+[\.,]\d{2}\s*GBP/gi      // 10.99 GBP
+            /\d+[\.,]\d{2}\s*GBP/gi,     // 10.99 GBP
+
+            // JPY - Japanese Yen
+            /¥\s*\d+/g,                  // ¥1000, ¥ 1000
+            /\d+\s*¥/g,                  // 1000¥, 1000 ¥
+            /\d+\s*JPY/gi,               // 1000 JPY
+            /\d+\s*YEN/gi,               // 1000 YEN
+
+            // CAD - Canadian Dollar
+            /C\$\s*\d+[\.,]\d{2}/g,      // C$10.99, C$ 10.99
+            /\d+[\.,]\d{2}\s*CAD/gi,     // 10.99 CAD
+
+            // AUD - Australian Dollar
+            /A\$\s*\d+[\.,]\d{2}/g,      // A$10.99, A$ 10.99
+            /\d+[\.,]\d{2}\s*AUD/gi,     // 10.99 AUD
+
+            // CHF - Swiss Franc
+            /CHF\s*\d+[\.,]\d{2}/g,      // CHF 10.99, CHF10.99
+            /\d+[\.,]\d{2}\s*CHF/gi,     // 10.99 CHF
+
+            // SEK - Swedish Krona
+            /\d+[\.,]\d{2}\s*SEK/gi,     // 10.99 SEK
+            /\d+[\.,]\d{2}\s*kr/gi,      // 10.99 kr (Swedish)
+
+            // NOK - Norwegian Krone
+            /\d+[\.,]\d{2}\s*NOK/gi,     // 10.99 NOK
+
+            // DKK - Danish Krone
+            /\d+[\.,]\d{2}\s*DKK/gi,     // 10.99 DKK
+
+            // CNY - Chinese Yuan
+            /¥\s*\d+[\.,]\d{2}/g,        // ¥10.99 (Chinese Yuan)
+            /\d+[\.,]\d{2}\s*CNY/gi,     // 10.99 CNY
+            /\d+[\.,]\d{2}\s*RMB/gi,     // 10.99 RMB
+
+            // INR - Indian Rupee
+            /₹\s*\d+[\.,]\d{2}/g,        // ₹10.99, ₹ 10.99
+            /\d+[\.,]\d{2}\s*₹/g,        // 10.99₹, 10.99 ₹
+            /\d+[\.,]\d{2}\s*INR/gi,     // 10.99 INR
+            /Rs\.?\s*\d+[\.,]\d{2}/g,    // Rs.10.99, Rs 10.99
+
+            // KRW - South Korean Won
+            /₩\s*\d+/g,                  // ₩1000, ₩ 1000
+            /\d+\s*₩/g,                  // 1000₩, 1000 ₩
+            /\d+\s*KRW/gi,               // 1000 KRW
+
+            // SGD - Singapore Dollar
+            /S\$\s*\d+[\.,]\d{2}/g,      // S$10.99, S$ 10.99
+            /\d+[\.,]\d{2}\s*SGD/gi,     // 10.99 SGD
+
+            // HKD - Hong Kong Dollar
+            /HK\$\s*\d+[\.,]\d{2}/g,     // HK$10.99, HK$ 10.99
+            /\d+[\.,]\d{2}\s*HKD/gi,     // 10.99 HKD
+
+            // NZD - New Zealand Dollar
+            /NZ\$\s*\d+[\.,]\d{2}/g,     // NZ$10.99, NZ$ 10.99
+            /\d+[\.,]\d{2}\s*NZD/gi,     // 10.99 NZD
+
+            // MXN - Mexican Peso
+            /\$\s*\d+[\.,]\d{2}\s*MXN/gi, // $10.99 MXN
+            /\d+[\.,]\d{2}\s*MXN/gi,     // 10.99 MXN
+
+            // BRL - Brazilian Real
+            /R\$\s*\d+[\.,]\d{2}/g,      // R$10.99, R$ 10.99
+            /\d+[\.,]\d{2}\s*BRL/gi,     // 10.99 BRL
+
+            // RUB - Russian Ruble
+            /₽\s*\d+[\.,]\d{2}/g,        // ₽10.99, ₽ 10.99
+            /\d+[\.,]\d{2}\s*₽/g,        // 10.99₽, 10.99 ₽
+            /\d+[\.,]\d{2}\s*RUB/gi,     // 10.99 RUB
+
+            // PLN - Polish Zloty
+            /\d+[\.,]\d{2}\s*PLN/gi,     // 10.99 PLN
+            /\d+[\.,]\d{2}\s*zł/g,       // 10.99 zł
+
+            // TRY - Turkish Lira
+            /₺\s*\d+[\.,]\d{2}/g,        // ₺10.99, ₺ 10.99
+            /\d+[\.,]\d{2}\s*₺/g,        // 10.99₺, 10.99 ₺
+            /\d+[\.,]\d{2}\s*TRY/gi,     // 10.99 TRY
+
+            // ZAR - South African Rand
+            /R\s*\d+[\.,]\d{2}/g,        // R10.99, R 10.99
+            /\d+[\.,]\d{2}\s*ZAR/gi,     // 10.99 ZAR
+
+            // THB - Thai Baht
+            /฿\s*\d+[\.,]\d{2}/g,        // ฿10.99, ฿ 10.99
+            /\d+[\.,]\d{2}\s*฿/g,        // 10.99฿, 10.99 ฿
+            /\d+[\.,]\d{2}\s*THB/gi,     // 10.99 THB
+
+            // MYR - Malaysian Ringgit
+            /RM\s*\d+[\.,]\d{2}/g,       // RM10.99, RM 10.99
+            /\d+[\.,]\d{2}\s*MYR/gi,     // 10.99 MYR
+
+            // PHP - Philippine Peso
+            /₱\s*\d+[\.,]\d{2}/g,        // ₱10.99, ₱ 10.99
+            /\d+[\.,]\d{2}\s*₱/g,        // 10.99₱, 10.99 ₱
+            /\d+[\.,]\d{2}\s*PHP/gi,     // 10.99 PHP
+
+            // IDR - Indonesian Rupiah
+            /Rp\s*\d+[\.,]?\d*/g,        // Rp10000, Rp 10.000
+            /\d+[\.,]?\d*\s*IDR/gi,      // 10000 IDR
+
+            // VND - Vietnamese Dong
+            /₫\s*\d+[\.,]?\d*/g,         // ₫10000, ₫ 10.000
+            /\d+[\.,]?\d*\s*₫/g,         // 10000₫, 10.000 ₫
+            /\d+[\.,]?\d*\s*VND/gi,      // 10000 VND
+
+            // AED - UAE Dirham
+            /AED\s*\d+[\.,]\d{2}/g,      // AED 10.99, AED10.99
+            /\d+[\.,]\d{2}\s*AED/gi,     // 10.99 AED
+
+            // SAR - Saudi Riyal
+            /SAR\s*\d+[\.,]\d{2}/g,      // SAR 10.99, SAR10.99
+            /\d+[\.,]\d{2}\s*SAR/gi,     // 10.99 SAR
+
+            // ILS - Israeli Shekel
+            /₪\s*\d+[\.,]\d{2}/g,        // ₪10.99, ₪ 10.99
+            /\d+[\.,]\d{2}\s*₪/g,        // 10.99₪, 10.99 ₪
+            /\d+[\.,]\d{2}\s*ILS/gi,     // 10.99 ILS
+
+            // CZK - Czech Koruna
+            /\d+[\.,]\d{2}\s*CZK/gi,     // 10.99 CZK
+            /\d+[\.,]\d{2}\s*Kč/g,       // 10.99 Kč
+
+            // HUF - Hungarian Forint
+            /\d+\s*HUF/gi,               // 1000 HUF
+            /\d+\s*Ft/g,                 // 1000 Ft
+
+            // RON - Romanian Leu
+            /\d+[\.,]\d{2}\s*RON/gi,     // 10.99 RON
+            /\d+[\.,]\d{2}\s*lei/gi      // 10.99 lei
         ];
 
         for (const pattern of patterns) {

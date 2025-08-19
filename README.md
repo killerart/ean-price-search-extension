@@ -8,7 +8,7 @@ A Chrome extension that finds item prices by EAN (European Article Number) code 
 - 🎯 Automatic EAN detection on web pages
 - 💰 Price extraction from search results
 - ⚙️ Easy API configuration
-- 🌐 Works with multiple currencies (USD, EUR, GBP, etc.)
+- 🌐 Works with 30+ currencies worldwide (USD, EUR, GBP, JPY, and many more)
 - 📱 Clean, modern interface
 
 ## Installation
@@ -72,11 +72,50 @@ A Chrome extension that finds item prices by EAN (European Article Number) code 
 
 ## Currency Support
 
-The extension can detect prices in multiple currencies:
-- USD ($)
-- EUR (€)
-- GBP (£)
-- JPY (¥)
+The extension can detect prices in multiple currencies from around the world:
+
+### Major Currencies
+- **USD** ($) - US Dollar
+- **EUR** (€) - Euro
+- **GBP** (£) - British Pound
+- **JPY** (¥) - Japanese Yen
+- **CAD** (C$) - Canadian Dollar
+- **AUD** (A$) - Australian Dollar
+- **CHF** - Swiss Franc
+
+### European Currencies
+- **SEK** (kr) - Swedish Krona
+- **NOK** - Norwegian Krone
+- **DKK** - Danish Krone
+- **PLN** (zł) - Polish Zloty
+- **CZK** (Kč) - Czech Koruna
+- **HUF** (Ft) - Hungarian Forint
+- **RON** (lei) - Romanian Leu
+
+### Asian Currencies
+- **CNY** (¥/RMB) - Chinese Yuan
+- **INR** (₹/Rs) - Indian Rupee
+- **KRW** (₩) - South Korean Won
+- **SGD** (S$) - Singapore Dollar
+- **HKD** (HK$) - Hong Kong Dollar
+- **THB** (฿) - Thai Baht
+- **MYR** (RM) - Malaysian Ringgit
+- **PHP** (₱) - Philippine Peso
+- **IDR** (Rp) - Indonesian Rupiah
+- **VND** (₫) - Vietnamese Dong
+
+### Other Currencies
+- **NZD** (NZ$) - New Zealand Dollar
+- **MXN** - Mexican Peso
+- **BRL** (R$) - Brazilian Real
+- **RUB** (₽) - Russian Ruble
+- **TRY** (₺) - Turkish Lira
+- **ZAR** (R) - South African Rand
+- **AED** - UAE Dirham
+- **SAR** - Saudi Riyal
+- **ILS** (₪) - Israeli Shekel
+
+The extension automatically detects prices using currency symbols, currency codes (like USD, EUR), and local currency notations.
 
 ## Files Structure
 
