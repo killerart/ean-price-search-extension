@@ -4,11 +4,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const loading = document.getElementById('loading');
     const results = document.getElementById('results');
     const settingsLink = document.getElementById('settingsLink');
+    const clearResultsBtn = document.getElementById('clearResultsBtn');
+    const clearResultsContainer = document.getElementById('clearResultsContainer');
 
-    // Load saved EAN code
-    chrome.storage.local.get(['lastEAN'], function(result) {
+    // Load saved EAN code and search results
+    chrome.storage.local.get(['lastEAN', 'lastSearchResults'], function(result) {
         if (result.lastEAN) {
             eanInput.value = result.lastEAN;
+        }
+        if (result.lastSearchResults) {
+            displayResults(result.lastSearchResults);
         }
     });
 
@@ -29,6 +34,11 @@ document.addEventListener('DOMContentLoaded', function() {
     settingsLink.addEventListener('click', function(e) {
         e.preventDefault();
         chrome.runtime.openOptionsPage();
+    });
+
+    // Handle clear results button click
+    clearResultsBtn.addEventListener('click', function() {
+        clearResults();
     });
 
     // Validate EAN input
@@ -80,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Show loading state
         loading.style.display = 'block';
-        results.innerHTML = '';
+        // Don't clear results immediately - only clear them when we have new results
         searchBtn.disabled = true;
 
         try {
@@ -110,6 +120,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         } catch (error) {
             showError(error.message);
+            // Clear saved results on error
+            chrome.storage.local.remove('lastSearchResults');
         } finally {
             loading.style.display = 'none';
             loading.querySelector('p').textContent = 'Searching for prices...';
@@ -122,8 +134,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (!searchResults || searchResults.length === 0) {
             results.innerHTML = '<div class="error">No price information found for this EAN code.</div>';
+            chrome.storage.local.remove('lastSearchResults');
+            clearResultsContainer.style.display = 'none';
             return;
         }
+
+        // Save search results for persistence
+        chrome.storage.local.set({ lastSearchResults: searchResults });
+
+        // Show clear results button
+        clearResultsContainer.style.display = 'block';
 
         searchResults.forEach(item => {
             const resultDiv = document.createElement('div');
@@ -201,5 +221,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function showError(message) {
         results.innerHTML = `<div class="error">${escapeHtml(message)}</div>`;
+        // Clear saved results when showing error
+        chrome.storage.local.remove('lastSearchResults');
+        clearResultsContainer.style.display = 'none';
+    }
+
+    function clearResults() {
+        results.innerHTML = '';
+        chrome.storage.local.remove('lastSearchResults');
+        clearResultsContainer.style.display = 'none';
     }
 });

@@ -75,6 +75,21 @@
             cursor: not-allowed;
         }
 
+        .clear-btn {
+            background: #ff6b6b;
+            margin-top: 10px;
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        .clear-btn:hover {
+            background: #ff5252;
+        }
+
+        .clear-results {
+            text-align: center;
+        }
+
         .loading {
             text-align: center;
             margin: 10px 0;
@@ -182,6 +197,10 @@
         </div>
 
         <div id="results" class="results"></div>
+
+        <div class="clear-results" id="clearResultsContainer" style="display: none;">
+            <button id="clearResultsBtn" class="clear-btn">Clear Results</button>
+        </div>
 
         <div class="settings-link">
             <a href="#" id="settingsLink">⚙️ API Settings</a>
